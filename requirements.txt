@@ -18,3 +18,5 @@ pip install streamlit
 pip install langchain-ollama
 
 pip install langchain-community
+
+pip install langgraph
