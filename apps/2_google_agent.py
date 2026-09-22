@@ -2,13 +2,13 @@ from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import create_agent
 from context.dev import ContextDev
-from langgraph.checkpoint.memory import InMemorysaver
+from langgraph.checkpoint.memory import InMemorySaver
 import os
 
 
 load_dotenv()
 client = ContextDev()
-memory=InMemorysaver()
+memory=InMemorySaver()
 llm=ChatGoogleGenerativeAI(model="gemini-3.6-flash")
 agent = create_agent(
     model=llm,
