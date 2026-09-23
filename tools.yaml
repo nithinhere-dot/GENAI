@@ -1,0 +1,92 @@
+sources:
+  my-pg-source:
+    kind: postgres
+    host: 127.0.0.1
+    port: 5432
+    database: genai
+    user: nithin
+    password:  ${POSTGRES_PASSWORD}
+
+tools:
+
+  create-task:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Create a new task with a title, description, and status.
+    parameters:
+      - name: title
+        type: string
+        description: The title of the task.
+
+      - name: description
+        type: string
+        description: A description of the task.
+
+      - name: status
+        type: string
+        description: The status of the task. Must be pending, in_progress, or completed.
+
+    statement: |
+      INSERT INTO tasks (title, description, status)
+      VALUES ($1, $2, $3)
+      RETURNING id, title, description, status, created_at;
+
+
+  get-tasks:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Get tasks. Results are limited to 10 and ordered by newest first.
+    parameters:
+      - name: status
+        type: string
+        description: Optional task status to filter by. Use pending, in_progress, or completed.
+
+    statement: |
+      SELECT id, title, description, status, created_at
+      FROM tasks
+      WHERE ($1 = '' OR status = $1)
+      ORDER BY created_at DESC
+      LIMIT 10;
+
+
+  update-task:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Update the status of a task using its ID.
+    parameters:
+      - name: task_id
+        type: integer
+        description: The ID of the task to update.
+
+      - name: status
+        type: string
+        description: The new status. Must be pending, in_progress, or completed.
+
+    statement: |
+      UPDATE tasks
+      SET status = $2
+      WHERE id = $1
+      RETURNING id, title, description, status, created_at;
+
+
+  delete-task:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Delete a task using its ID.
+    parameters:
+      - name: task_id
+        type: integer
+        description: The ID of the task to delete.
+
+    statement: |
+      DELETE FROM tasks
+      WHERE id = $1
+      RETURNING id, title, description, status, created_at;
+
+
+toolsets:
+  task_toolset:
+    - create-task
+    - get-tasks
+    - update-task
+    - delete-task
