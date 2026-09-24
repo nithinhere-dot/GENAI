@@ -1,1 +1,74 @@
-hello My name is nithin Kumar Hi there
+Yes. If you're okay with **undoing only the latest commit**, don't delete `.git` or your previous commits.
+
+The important thing is that `toolbox` is already inside the latest commit, so we need to remove it from that commit before pushing.
+
+### 1. First, add `toolbox` to `.gitignore`
+
+```bash
+echo "toolbox" >> .gitignore
+```
+
+### 2. Remove `toolbox` from Git tracking
+
+If you want to keep the file on your computer:
+
+```bash
+git rm --cached toolbox
+```
+
+If you don't need the file at all:
+
+```bash
+git rm toolbox
+```
+
+### 3. Undo the latest commit but keep its changes
+
+```bash
+git reset --soft HEAD~1
+```
+
+This moves your branch back one commit while keeping the changes staged.
+
+Then check:
+
+```bash
+git status
+```
+
+### 4. Create the corrected commit
+
+```bash
+git add .
+git commit -m "Update GENAI project"
+```
+
+### 5. Push
+
+```bash
+git push origin master
+```
+
+However, **there's one important catch**: if `toolbox` existed in an **older commit**, GitHub will still reject the push because the 300 MB file remains in history.
+
+You can check whether it was introduced in the latest commit with:
+
+```bash
+git log --stat -1
+```
+
+If `toolbox` appears there, the above approach should be enough **provided the previous commits don't contain it**.
+
+If you paste the output of:
+
+```bash
+git log --oneline --all -5
+```
+
+and
+
+```bash
+git log --stat -1
+```
+
+I can tell you exactly which Git commands to run without touching your earlier commits.
