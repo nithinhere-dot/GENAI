@@ -1,0 +1,2 @@
+llm_model=gemini-3.6-flash
+embediings=gemini-embedding-001
