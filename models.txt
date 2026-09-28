@@ -1,2 +1,7 @@
-llm_model=gemini-3.6-flash
-embediings=gemini-embedding-001
+llm_model="gemini-3.6-flash"
+llm_model="gemini-3.7-flash"
+embediings
+gemini-embedding-001
+gemini-embedding-2
+
+VOYAGE_EMEDDIGS
